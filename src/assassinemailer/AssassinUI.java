@@ -23,16 +23,35 @@
  */
 package assassinemailer;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+import javax.swing.ListModel;
+
 /**
  *
  * @author Gabriel
  */
 public class AssassinUI extends javax.swing.JFrame {
 
+    private final AssassinEmailer ae = new AssassinEmailer();
+    private final ListModel emailListModel = new DefaultListModel();
+    private final ArrayList<EmailPair> emails = new ArrayList<>();
+    private Boolean savePending = false;
+    private Boolean unameFieldClicked = false;
+    private Boolean pwordFieldClicked = false;
+    
+    public static String DEFAULTTIME = "8:00 AM";
+    public static String DEFAULTDATE = "January 1, 2015";
+    
+    
     /**
      * Creates new form AssassinUI
      */
     public AssassinUI() {
+        ae.setTime(DEFAULTTIME);
+        ae.setDate(DEFAULTDATE);
         initComponents();
     }
 
@@ -45,56 +64,301 @@ public class AssassinUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        emailSetupPanel = new javax.swing.JPanel();
-        loggedInIndicator = new javax.swing.JLabel();
-        providerSelect = new javax.swing.JPanel();
-        jRadioButton1 = new javax.swing.JRadioButton();
+        pairEditor = new javax.swing.JDialog();
+        emailEditField = new javax.swing.JTextField();
+        nameEditField = new javax.swing.JTextField();
+        emailLabel = new javax.swing.JLabel();
+        nameLabel = new javax.swing.JLabel();
+        savePairEditButton = new javax.swing.JButton();
+        cancelPairEditButton = new javax.swing.JButton();
+        loginPanel = new javax.swing.JPanel();
+        unameField = new javax.swing.JTextField();
+        pwordField = new javax.swing.JPasswordField();
+        loginButton = new javax.swing.JButton();
+        loginStatusLabel = new javax.swing.JLabel();
+        timeDatePanel = new javax.swing.JPanel();
+        timeLabel = new javax.swing.JLabel();
+        dateLabel = new javax.swing.JLabel();
+        timeTextField = new javax.swing.JTextField();
+        dateTextField = new javax.swing.JTextField();
+        editorTabbedPane = new javax.swing.JTabbedPane();
+        messagePanel = new javax.swing.JPanel();
+        msgScrollPanel = new javax.swing.JScrollPane();
+        msgTextArea = new javax.swing.JTextArea();
+        recipientPanel = new javax.swing.JPanel();
+        addButton = new javax.swing.JButton();
+        editButton = new javax.swing.JButton();
+        removeButton = new javax.swing.JButton();
+        emailScrollPane = new javax.swing.JScrollPane();
+        emailList = new javax.swing.JList();
+        sendButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        pairEditor.setTitle("Edit Recipient");
+        pairEditor.setMinimumSize(new java.awt.Dimension(225, 125));
+        pairEditor.setModal(true);
 
-        loggedInIndicator.setText("Not Logged In");
+        emailEditField.setText("jTextField1");
 
-        providerSelect.setBorder(javax.swing.BorderFactory.createTitledBorder("Select Email Provider"));
+        nameEditField.setText("jTextField2");
 
-        jRadioButton1.setText("jRadioButton1");
+        emailLabel.setText("Email:");
 
-        javax.swing.GroupLayout providerSelectLayout = new javax.swing.GroupLayout(providerSelect);
-        providerSelect.setLayout(providerSelectLayout);
-        providerSelectLayout.setHorizontalGroup(
-            providerSelectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(providerSelectLayout.createSequentialGroup()
-                .addComponent(jRadioButton1)
-                .addGap(0, 44, Short.MAX_VALUE))
-        );
-        providerSelectLayout.setVerticalGroup(
-            providerSelectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(providerSelectLayout.createSequentialGroup()
-                .addComponent(jRadioButton1)
-                .addGap(0, 77, Short.MAX_VALUE))
-        );
+        nameLabel.setText("Name:");
 
-        javax.swing.GroupLayout emailSetupPanelLayout = new javax.swing.GroupLayout(emailSetupPanel);
-        emailSetupPanel.setLayout(emailSetupPanelLayout);
-        emailSetupPanelLayout.setHorizontalGroup(
-            emailSetupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(emailSetupPanelLayout.createSequentialGroup()
+        savePairEditButton.setText("Save");
+        savePairEditButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                savePairEditButtonActionPerformed(evt);
+            }
+        });
+
+        cancelPairEditButton.setText("Cancel");
+        cancelPairEditButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelPairEditButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pairEditorLayout = new javax.swing.GroupLayout(pairEditor.getContentPane());
+        pairEditor.getContentPane().setLayout(pairEditorLayout);
+        pairEditorLayout.setHorizontalGroup(
+            pairEditorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pairEditorLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(emailSetupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(loggedInIndicator, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(emailSetupPanelLayout.createSequentialGroup()
-                        .addComponent(providerSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 29, Short.MAX_VALUE)))
+                .addGroup(pairEditorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pairEditorLayout.createSequentialGroup()
+                        .addComponent(emailLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(emailEditField))
+                    .addGroup(pairEditorLayout.createSequentialGroup()
+                        .addComponent(nameLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(nameEditField))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pairEditorLayout.createSequentialGroup()
+                        .addComponent(cancelPairEditButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
+                        .addComponent(savePairEditButton)))
                 .addContainerGap())
         );
-        emailSetupPanelLayout.setVerticalGroup(
-            emailSetupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(emailSetupPanelLayout.createSequentialGroup()
+        pairEditorLayout.setVerticalGroup(
+            pairEditorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pairEditorLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(loggedInIndicator, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pairEditorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(emailEditField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(emailLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(providerSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(191, Short.MAX_VALUE))
+                .addGroup(pairEditorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nameEditField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nameLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pairEditorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(savePairEditButton)
+                    .addComponent(cancelPairEditButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Assassin Emailer");
+
+        unameField.setText("username");
+        unameField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                unameFieldActionPerformed(evt);
+            }
+        });
+        unameField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                unameFieldFocusGained(evt);
+            }
+        });
+
+        pwordField.setText("----");
+        pwordField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                pwordFieldFocusGained(evt);
+            }
+        });
+
+        loginButton.setText("Log In");
+        loginButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginButtonActionPerformed(evt);
+            }
+        });
+
+        loginStatusLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        loginStatusLabel.setText("Please log in");
+
+        javax.swing.GroupLayout loginPanelLayout = new javax.swing.GroupLayout(loginPanel);
+        loginPanel.setLayout(loginPanelLayout);
+        loginPanelLayout.setHorizontalGroup(
+            loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(loginPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(loginButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pwordField)
+                    .addComponent(unameField))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(loginStatusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        loginPanelLayout.setVerticalGroup(
+            loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(loginPanelLayout.createSequentialGroup()
+                .addComponent(loginStatusLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(unameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(loginButton)
+                .addContainerGap())
+        );
+
+        timeLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        timeLabel.setText("Time:");
+
+        dateLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        dateLabel.setText("Date:");
+
+        timeTextField.setText(DEFAULTTIME);
+        timeTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                timeTextFieldActionPerformed(evt);
+            }
+        });
+        timeTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                timeTextFieldFocusLost(evt);
+            }
+        });
+
+        dateTextField.setText(DEFAULTDATE);
+        dateTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                dateTextFieldFocusLost(evt);
+            }
+        });
+
+        javax.swing.GroupLayout timeDatePanelLayout = new javax.swing.GroupLayout(timeDatePanel);
+        timeDatePanel.setLayout(timeDatePanelLayout);
+        timeDatePanelLayout.setHorizontalGroup(
+            timeDatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(timeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(dateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(timeTextField)
+            .addComponent(dateTextField)
+        );
+        timeDatePanelLayout.setVerticalGroup(
+            timeDatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(timeDatePanelLayout.createSequentialGroup()
+                .addComponent(timeLabel)
+                .addGap(0, 0, 0)
+                .addComponent(timeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(dateLabel)
+                .addGap(0, 0, 0)
+                .addComponent(dateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        msgTextArea.setColumns(20);
+        msgTextArea.setLineWrap(true);
+        msgTextArea.setRows(5);
+        msgTextArea.setText(ae.assembledMessageForm());
+        msgTextArea.setWrapStyleWord(true);
+        msgTextArea.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                msgTextAreaFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                msgTextAreaFocusLost(evt);
+            }
+        });
+        msgScrollPanel.setViewportView(msgTextArea);
+
+        javax.swing.GroupLayout messagePanelLayout = new javax.swing.GroupLayout(messagePanel);
+        messagePanel.setLayout(messagePanelLayout);
+        messagePanelLayout.setHorizontalGroup(
+            messagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(messagePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(msgScrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        messagePanelLayout.setVerticalGroup(
+            messagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(messagePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(msgScrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        editorTabbedPane.addTab("Message", messagePanel);
+
+        addButton.setText("Add");
+        addButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addButtonActionPerformed(evt);
+            }
+        });
+
+        editButton.setText("Edit");
+        editButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editButtonActionPerformed(evt);
+            }
+        });
+
+        removeButton.setText("Remove");
+        removeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeButtonActionPerformed(evt);
+            }
+        });
+
+        emailScrollPane.setViewportView(emailList);
+
+        javax.swing.GroupLayout recipientPanelLayout = new javax.swing.GroupLayout(recipientPanel);
+        recipientPanel.setLayout(recipientPanelLayout);
+        recipientPanelLayout.setHorizontalGroup(
+            recipientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(recipientPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(recipientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(emailScrollPane)
+                    .addGroup(recipientPanelLayout.createSequentialGroup()
+                        .addComponent(addButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(editButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(removeButton)
+                        .addGap(0, 79, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        recipientPanelLayout.setVerticalGroup(
+            recipientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(recipientPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(emailScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(recipientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(addButton)
+                    .addComponent(editButton)
+                    .addComponent(removeButton))
+                .addContainerGap())
+        );
+
+        editorTabbedPane.addTab("Recipients", recipientPanel);
+
+        sendButton.setText("Send!");
+        sendButton.setMaximumSize(new java.awt.Dimension(83, 76));
+        sendButton.setMinimumSize(new java.awt.Dimension(83, 76));
+        sendButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -102,19 +366,131 @@ public class AssassinUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(emailSetupPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(527, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(loginPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(timeDatePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(sendButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(editorTabbedPane)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(emailSetupPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(editorTabbedPane)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(loginPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(timeDatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void unameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unameFieldActionPerformed
+       
+    }//GEN-LAST:event_unameFieldActionPerformed
+
+    private void unameFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_unameFieldFocusGained
+        if (!unameFieldClicked) {
+            unameFieldClicked = true;
+            unameField.setText("");
+        }
+        unameField.selectAll();
+    }//GEN-LAST:event_unameFieldFocusGained
+
+    private void pwordFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_pwordFieldFocusGained
+        if (!pwordFieldClicked) {
+            pwordFieldClicked = true;
+            pwordField.setText("");
+        }
+        pwordField.selectAll();
+        pwordField.selectAll();
+    }//GEN-LAST:event_pwordFieldFocusGained
+
+    private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
+        ae.setUserEmail(unameField.getText());
+        ae.setUserPass( new String(pwordField.getPassword()));
+        Arrays.fill(pwordField.getPassword(), '0');
+        loginStatusLabel.setText("Login Updated");
+    }//GEN-LAST:event_loginButtonActionPerformed
+
+    private void cancelPairEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelPairEditButtonActionPerformed
+        pairEditor.setVisible(false);
+    }//GEN-LAST:event_cancelPairEditButtonActionPerformed
+
+    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
+        clearEditor();
+        pairEditor.setVisible(true);
+        if (savePending) {
+            emails.add(getEditorEmailPair());
+            emailList.setListData(emails.toArray(new EmailPair[0]));
+            savePending = false;
+        }
+    }//GEN-LAST:event_addButtonActionPerformed
+
+    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
+        if (emailList.getSelectedIndex()>=0) {
+            editorLoad(emails.get(emailList.getSelectedIndex()));
+            pairEditor.setVisible(true);
+            if (savePending) {
+                emails.set(emailList.getSelectedIndex(),getEditorEmailPair());
+                emailList.setListData(emails.toArray());
+                savePending = false;
+            }
+        }
+    }//GEN-LAST:event_editButtonActionPerformed
+
+    private void savePairEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_savePairEditButtonActionPerformed
+        savePending = true;
+        pairEditor.setVisible(false);
+    }//GEN-LAST:event_savePairEditButtonActionPerformed
+
+    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
+        if (emailList.getSelectedIndex()>=0) {
+            emails.removeAll(emailList.getSelectedValuesList());
+            emailList.setListData(emails.toArray());
+        }
+    }//GEN-LAST:event_removeButtonActionPerformed
+
+    private void msgTextAreaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_msgTextAreaFocusLost
+        ae.setMessage(msgTextArea.getText());
+        msgTextArea.setText(ae.assembledMessageForm());
+    }//GEN-LAST:event_msgTextAreaFocusLost
+
+    private void msgTextAreaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_msgTextAreaFocusGained
+        msgTextArea.setText(ae.getMessage());
+    }//GEN-LAST:event_msgTextAreaFocusGained
+
+    private void timeTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_timeTextFieldFocusLost
+        ae.setTime(timeTextField.getText());
+    }//GEN-LAST:event_timeTextFieldFocusLost
+
+    private void dateTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_dateTextFieldFocusLost
+        ae.setDate(dateTextField.getText());
+    }//GEN-LAST:event_dateTextFieldFocusLost
+
+    private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
+        ae.setEmails(emails);
+        if (ae.ready()) {
+            ae.sendMessages();
+        }
+        else {
+            JOptionPane.showMessageDialog(this,
+                    "Couldn't send message - make sure "
+                    + "you have correctly entered your credentials and list of recipients.", "Problem sending emails",
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_sendButtonActionPerformed
+
+    private void timeTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timeTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_timeTextFieldActionPerformed
 
     /**
      * @param args the command line arguments
@@ -127,21 +503,16 @@ public class AssassinUI extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AssassinUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AssassinUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AssassinUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(AssassinUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+ 
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -150,11 +521,50 @@ public class AssassinUI extends javax.swing.JFrame {
             }
         });
     }
+    
+    private void clearEditor() {
+        editorLoad(new EmailPair("",""));
+    }
+    
+    private void editorLoad( EmailPair ep ) {
+        emailEditField.setText(ep.getEmail());
+        nameEditField.setText(ep.getName());
+    }
+    
+    private EmailPair getEditorEmailPair () {
+        return new EmailPair(
+                emailEditField.getText(),
+                nameEditField.getText());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel emailSetupPanel;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JLabel loggedInIndicator;
-    private javax.swing.JPanel providerSelect;
+    private javax.swing.JButton addButton;
+    private javax.swing.JButton cancelPairEditButton;
+    private javax.swing.JLabel dateLabel;
+    private javax.swing.JTextField dateTextField;
+    private javax.swing.JButton editButton;
+    private javax.swing.JTabbedPane editorTabbedPane;
+    private javax.swing.JTextField emailEditField;
+    private javax.swing.JLabel emailLabel;
+    private javax.swing.JList emailList;
+    private javax.swing.JScrollPane emailScrollPane;
+    private javax.swing.JButton loginButton;
+    private javax.swing.JPanel loginPanel;
+    private javax.swing.JLabel loginStatusLabel;
+    private javax.swing.JPanel messagePanel;
+    private javax.swing.JScrollPane msgScrollPanel;
+    private javax.swing.JTextArea msgTextArea;
+    private javax.swing.JTextField nameEditField;
+    private javax.swing.JLabel nameLabel;
+    private javax.swing.JDialog pairEditor;
+    private javax.swing.JPasswordField pwordField;
+    private javax.swing.JPanel recipientPanel;
+    private javax.swing.JButton removeButton;
+    private javax.swing.JButton savePairEditButton;
+    private javax.swing.JButton sendButton;
+    private javax.swing.JPanel timeDatePanel;
+    private javax.swing.JLabel timeLabel;
+    private javax.swing.JTextField timeTextField;
+    private javax.swing.JTextField unameField;
     // End of variables declaration//GEN-END:variables
 }
