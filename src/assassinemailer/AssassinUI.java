@@ -23,11 +23,20 @@
  */
 package assassinemailer;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.ListModel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /**
  *
@@ -37,7 +46,7 @@ public class AssassinUI extends javax.swing.JFrame {
 
     private final AssassinEmailer ae = new AssassinEmailer();
     private final ListModel emailListModel = new DefaultListModel();
-    private final ArrayList<EmailPair> emails = new ArrayList<>();
+    private ArrayList<EmailPair> emails = new ArrayList<>();
     private Boolean savePending = false;
     private Boolean unameFieldClicked = false;
     private Boolean pwordFieldClicked = false;
@@ -53,6 +62,48 @@ public class AssassinUI extends javax.swing.JFrame {
         ae.setTime(DEFAULTTIME);
         ae.setDate(DEFAULTDATE);
         initComponents();
+        File f = new File("emails.dat");
+        if (f.exists() ) {
+            saveDBButton.setText("Load");
+        }
+        
+        // Listen for changes in the text
+        timeTextField.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                changed();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                changed();
+            }
+
+            public void insertUpdate(DocumentEvent e) {
+                changed();
+            }
+            
+            public void changed() {
+                ae.setTime(timeTextField.getText());
+                msgTextArea.setText(ae.assembledMessageForm());
+            }
+        });
+        dateTextField.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                changed();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                changed();
+            }
+
+            public void insertUpdate(DocumentEvent e) {
+                changed();
+            }
+            
+            public void changed() {
+                ae.setDate(dateTextField.getText());
+                msgTextArea.setText(ae.assembledMessageForm());
+            }
+        });
     }
 
     /**
@@ -91,6 +142,7 @@ public class AssassinUI extends javax.swing.JFrame {
         removeButton = new javax.swing.JButton();
         emailScrollPane = new javax.swing.JScrollPane();
         emailList = new javax.swing.JList();
+        saveDBButton = new javax.swing.JButton();
         sendButton = new javax.swing.JButton();
 
         pairEditor.setTitle("Edit Recipient");
@@ -126,18 +178,18 @@ public class AssassinUI extends javax.swing.JFrame {
             .addGroup(pairEditorLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pairEditorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pairEditorLayout.createSequentialGroup()
-                        .addComponent(emailLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(emailEditField))
-                    .addGroup(pairEditorLayout.createSequentialGroup()
-                        .addComponent(nameLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nameEditField))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pairEditorLayout.createSequentialGroup()
                         .addComponent(cancelPairEditButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
-                        .addComponent(savePairEditButton)))
+                        .addComponent(savePairEditButton))
+                    .addGroup(pairEditorLayout.createSequentialGroup()
+                        .addComponent(nameLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(emailEditField))
+                    .addGroup(pairEditorLayout.createSequentialGroup()
+                        .addComponent(emailLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(nameEditField)))
                 .addContainerGap())
         );
         pairEditorLayout.setVerticalGroup(
@@ -145,12 +197,12 @@ public class AssassinUI extends javax.swing.JFrame {
             .addGroup(pairEditorLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pairEditorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(emailEditField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(emailLabel))
+                    .addComponent(emailLabel)
+                    .addComponent(nameEditField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pairEditorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nameEditField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(nameLabel))
+                    .addComponent(nameLabel)
+                    .addComponent(emailEditField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pairEditorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(savePairEditButton)
@@ -223,11 +275,6 @@ public class AssassinUI extends javax.swing.JFrame {
         dateLabel.setText("Date:");
 
         timeTextField.setText(DEFAULTTIME);
-        timeTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                timeTextFieldActionPerformed(evt);
-            }
-        });
         timeTextField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 timeTextFieldFocusLost(evt);
@@ -319,6 +366,13 @@ public class AssassinUI extends javax.swing.JFrame {
 
         emailScrollPane.setViewportView(emailList);
 
+        saveDBButton.setText("Save");
+        saveDBButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveDBButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout recipientPanelLayout = new javax.swing.GroupLayout(recipientPanel);
         recipientPanel.setLayout(recipientPanelLayout);
         recipientPanelLayout.setHorizontalGroup(
@@ -326,14 +380,15 @@ public class AssassinUI extends javax.swing.JFrame {
             .addGroup(recipientPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(recipientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(emailScrollPane)
+                    .addComponent(emailScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
                     .addGroup(recipientPanelLayout.createSequentialGroup()
                         .addComponent(addButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(editButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(removeButton)
-                        .addGap(0, 79, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(saveDBButton)))
                 .addContainerGap())
         );
         recipientPanelLayout.setVerticalGroup(
@@ -345,7 +400,8 @@ public class AssassinUI extends javax.swing.JFrame {
                 .addGroup(recipientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addButton)
                     .addComponent(editButton)
-                    .addComponent(removeButton))
+                    .addComponent(removeButton)
+                    .addComponent(saveDBButton))
                 .addContainerGap())
         );
 
@@ -488,9 +544,47 @@ public class AssassinUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_sendButtonActionPerformed
 
-    private void timeTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timeTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_timeTextFieldActionPerformed
+    private void saveDBButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveDBButtonActionPerformed
+        if (saveDBButton.getText().equals("Save")) {
+            try {
+                FileOutputStream out = new FileOutputStream("emails.dat");
+                ObjectOutputStream oos = new ObjectOutputStream(out);
+                oos.writeObject(emails);
+                out.close();
+                saveDBButton.setText("Load");
+            } catch (FileNotFoundException ex) {
+                JOptionPane.showMessageDialog(this, "Something has gone wrong. "
+                        + "Maybe the database file exists, but the program is unable to access it."
+                        + "Check your permissions and try again.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, "Something has gone wrong. "
+                        + "Unable to access the file to write.  This is usually temporary - "
+                        + "try again.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        else {
+            try {
+                FileInputStream fin = new FileInputStream("emails.dat");
+                ObjectInputStream ois = new ObjectInputStream(fin);
+                emails = (ArrayList<EmailPair>) ois.readObject();
+                emailList.setListData(emails.toArray());
+                fin.close();
+                saveDBButton.setText("Save");
+            } catch (FileNotFoundException ex) {
+                JOptionPane.showMessageDialog(this, "Error: There's no file to load. "
+                        + "Try saving first.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+//            Logger.getLogger(CutUpsUI.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException | ClassNotFoundException ex) {
+                JOptionPane.showMessageDialog(this, "Error: unable to access the file. "
+                        + "If this error persists, the file is malformed or corrupted.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+//            Logger.getLogger(CutUpsUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_saveDBButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -560,6 +654,7 @@ public class AssassinUI extends javax.swing.JFrame {
     private javax.swing.JPasswordField pwordField;
     private javax.swing.JPanel recipientPanel;
     private javax.swing.JButton removeButton;
+    private javax.swing.JButton saveDBButton;
     private javax.swing.JButton savePairEditButton;
     private javax.swing.JButton sendButton;
     private javax.swing.JPanel timeDatePanel;
