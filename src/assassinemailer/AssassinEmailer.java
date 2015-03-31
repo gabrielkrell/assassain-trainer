@@ -221,19 +221,20 @@ public class AssassinEmailer {
     
     public ArrayList<String> previewMessages() {
         ArrayList<String> out = new ArrayList<>();
-        for (String[][] mailPair : generatePairs()) {
-            out.add(processMessage(mailPair[0][1], mailPair[1][1], time, date));
+        for (EmailPair[] mailPair : generatePairs()) {
+            out.add(processMessage(mailPair[0].getName(), mailPair[1].getName(), time, date));
         }
         return out;
     }
     
     public void sendMessages() {
-        for (String[][] mailPair : generatePairs()) {
+        for (EmailPair[] mailPair : generatePairs()) {
             try {
                 GmailSender.send(
                         userEmail, userPassword,  // login creds
-                        mailPair[0][0], title, // TO:, title
-                        processMessage(mailPair[0][1], mailPair[1][1], time, date)); // message
+                        mailPair[0].getEmail(), title, // TO:, title
+                        processMessage(mailPair[0].getName(), mailPair[1].getName(), time, date));
+                // message: recipient, target, time, date
                 /*
                 username -
                 GMail username password -
@@ -248,19 +249,19 @@ public class AssassinEmailer {
         }
     }
     
-    private ArrayList<String[][]> generatePairs() {
+    private ArrayList<EmailPair[]> generatePairs() {
         // shuffle the email addresses and pair them so that there is only one loop.
         // (each address leads to only one other and is lead to by only one other)
         
-        ArrayList<String[]> newpairs = (ArrayList<String[]>) emails.clone();
+        ArrayList<EmailPair> newpairs = (ArrayList<EmailPair>) emails.clone();
         Collections.shuffle(newpairs); // preserve original email order for editing later
         
-        ArrayList<String[][]> output = new ArrayList<>();
+        ArrayList<EmailPair[]> output = new ArrayList<>();
         for (int i=0; i<newpairs.size()-1; i++) {
-            output.add(new String[][]{newpairs.get(i),newpairs.get(i+1)});
-            System.out.println(Arrays.deepToString(output.get(output.size()-1)));
+            output.add(new EmailPair[]{newpairs.get(i),newpairs.get(i+1)});
+//            System.out.println(Arrays.deepToString(output.get(output.size()-1)));
         }
-        output.add(new String[][]{newpairs.get(newpairs.size()-1),newpairs.get(0)});
+        output.add(new EmailPair[]{newpairs.get(newpairs.size()-1),newpairs.get(0)});
         return output;
     }
     
@@ -302,10 +303,14 @@ public class AssassinEmailer {
     }
     
     public Boolean ready() {
+        
+        
+        System.out.println(userEmail+messageText+emails);
+        System.out.println(!userPassword.isEmpty());
          return null!=userEmail
              &&  null!=userPassword
              &&  null!=messageText
-             &&! emails.isEmpty();
+             && !emails.isEmpty();
     }
     
     
