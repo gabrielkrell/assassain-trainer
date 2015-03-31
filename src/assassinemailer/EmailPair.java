@@ -23,11 +23,13 @@
  */
 package assassinemailer;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Gabriel Krell
  */
-public class EmailPair {
+public class EmailPair implements Serializable {
     private final String email;
     private final String name;
     EmailPair ( String email, String name) {
@@ -35,11 +37,17 @@ public class EmailPair {
         this.name = name;
     }
     EmailPair( String input) {
-        this(input.substring(0,input.indexOf(",")-1), input.substring(input.indexOf(",")+1).trim());
+        // form is [ Name <email@address> ].  Tried to be tolerant with spaces
+        // (liberal trim()s ).
+        input = input.trim();
+        String nameHalf = input.substring(0,input.indexOf("<")-1);
+        String emailHalf = input.substring(input.indexOf("<")).trim();
+        name = nameHalf.trim();
+        email = emailHalf.substring(emailHalf.indexOf("<")+1,emailHalf.indexOf(">")-1).trim();
     }
     @Override
     public String toString() {
-        return email+", "+name;
+        return name+" <" + email + ">";
     }
     
     public String getEmail() {
