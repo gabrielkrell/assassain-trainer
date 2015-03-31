@@ -32,7 +32,7 @@ import java.io.Serializable;
 public class EmailPair implements Serializable {
     private final String email;
     private final String name;
-    EmailPair ( String email, String name) {
+    EmailPair ( String name, String email) {
         this.email = email;
         this.name = name;
     }
