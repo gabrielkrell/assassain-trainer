@@ -27,6 +27,8 @@ import com.sun.mail.smtp.SMTPTransport;
 import java.security.Security;
 import java.util.Date;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -44,7 +46,7 @@ public class GmailSender {
     }
 
     /**
-     * Send email using GMail SMTP server.
+     * send email using GMail SMTP server.
      *
      * @param username GMail username
      * @param password GMail password
@@ -54,12 +56,18 @@ public class GmailSender {
      * @throws AddressException if the email address parse failed
      * @throws MessagingException if the connection is dead or not in the connected state or if the message is not a MimeMessage
      */
-    public static void Send(final String username, final String password, String recipientEmail, String title, String message) throws AddressException, MessagingException {
+    public static void send(final String username, final String password, String recipientEmail, String title, String message) throws AddressException, MessagingException {
         GmailSender.Send(username, password, recipientEmail, "", title, message);
+        Logger.getLogger(GmailSender.class.getName()).log(Level.INFO, "Sent message to {0}: {1}", new Object[]{recipientEmail, message});
     }
+    
 
+    public static void dummySend(final String username, final String password, String recipientEmail, String title, String message) throws AddressException, MessagingException {
+//        GmailSender.Send(username, password, recipientEmail, "", title, message);
+        Logger.getLogger(GmailSender.class.getName()).log(Level.INFO, "Would have sent message to {0}: {1}", new Object[]{recipientEmail, message});
+    }
     /**
-     * Send email using GMail SMTP server.
+     * send email using GMail SMTP server.
      *
      * @param username GMail username
      * @param password GMail password
