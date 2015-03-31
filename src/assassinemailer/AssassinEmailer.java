@@ -302,15 +302,8 @@ public class AssassinEmailer {
         
     }
     
-    public Boolean ready() {
-        
-        
-        System.out.println(userEmail+messageText+emails);
-        System.out.println(!userPassword.isEmpty());
-         return null!=userEmail
-             &&  null!=userPassword
-             &&  null!=messageText
-             && !emails.isEmpty();
+    public Boolean hasCredentials() {
+        return null!=userPassword && null!=userEmail;
     }
     
     
