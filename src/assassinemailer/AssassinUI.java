@@ -544,7 +544,16 @@ public class AssassinUI extends javax.swing.JFrame {
         ae.setEmails(emails);
         if (ae.hasCredentials()) {
             if (!emails.isEmpty()) {
-                ae.sendMessages();
+                if (JOptionPane.OK_OPTION == 
+                        JOptionPane.showConfirmDialog(
+                            this,
+                            "Send email to " + emails.size() + " participants from " + ae.getUserEmail() + "@gmail.com?",
+                            "Confirm emails",
+                            JOptionPane.OK_CANCEL_OPTION,
+                            JOptionPane.PLAIN_MESSAGE)) 
+                {
+                    ae.sendMessages();
+                }
             }
             else {
                 JOptionPane.showMessageDialog(this,
