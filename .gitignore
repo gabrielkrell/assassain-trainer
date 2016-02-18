@@ -14,3 +14,9 @@ hs_err_pid*
 
 #Saved email database - this should be per-user
 emails.dat
+
+#some mysterious netbeans stuff
+/nbproject/private/
+
+#Don't kill our mail library, please
+!/lib/javax.mail.jar
